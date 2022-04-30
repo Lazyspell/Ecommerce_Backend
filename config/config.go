@@ -1,6 +1,9 @@
 package config
 
+import "log"
+
 type AppConfig struct {
+	ErrorLog     *log.Logger
 	InProduction bool
 	Port         int
 	Env          string

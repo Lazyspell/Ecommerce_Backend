@@ -17,6 +17,8 @@ func Routes(app *config.AppConfig) http.Handler {
 	}))
 
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
+	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
+	mux.Post("/users/new", handlers.Repo.NewUser)
 
 	return mux
 }

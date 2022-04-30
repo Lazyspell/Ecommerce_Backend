@@ -39,3 +39,26 @@ func (m *postgresDBRepo) AllCategories() ([]models.Categories, error) {
 
 	return categories, nil
 }
+
+func (m *postgresDBRepo) CategoryById(id int) (models.Categories, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var category models.Categories
+
+	query := `select id, title, image_url from categories where id = $1`
+
+	item := m.DB.QueryRowContext(ctx, query, id)
+
+	err := item.Scan(
+		&category.Id,
+		&category.ImageUrl,
+		&category.Title,
+	)
+	if err != nil {
+		return category, nil
+	}
+
+	return category, nil
+
+}
