@@ -5,10 +5,8 @@ import (
 	"net/http"
 	"net/mail"
 
-	"github.com/lazyspell/Ecommerce_Backend/config"
 	"github.com/lazyspell/Ecommerce_Backend/helpers"
 	"github.com/lazyspell/Ecommerce_Backend/models"
-	"github.com/lazyspell/Ecommerce_Backend/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -55,13 +53,4 @@ func validMailAddress(address string) bool {
 		return false
 	}
 	return true
-}
-
-func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
-	oauthState := utils.GenerateStateOauthCookie(w)
-
-	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
-
-	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
-
 }

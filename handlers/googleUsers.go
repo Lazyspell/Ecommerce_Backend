@@ -1,4 +1,4 @@
-package controller
+package handlers
 
 import (
 	"context"
@@ -9,9 +9,19 @@ import (
 	"net/http"
 
 	"github.com/lazyspell/Ecommerce_Backend/config"
+	"github.com/lazyspell/Ecommerce_Backend/utils"
 )
 
-func GoogleCallback(w http.ResponseWriter, r *http.Request) {
+func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
+	oauthState := utils.GenerateStateOauthCookie(w)
+
+	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
+
+	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
+
+}
+
+func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	// get oauth state from cookie for this user
 	oauthState, _ := r.Cookie("oauthstate")
 	state := r.FormValue("state")
