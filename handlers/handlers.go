@@ -1,19 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
-	"log"
-	"net/http"
-	"net/mail"
-
 	"github.com/lazyspell/Ecommerce_Backend/config"
 	"github.com/lazyspell/Ecommerce_Backend/driver"
-	"github.com/lazyspell/Ecommerce_Backend/helpers"
-	"github.com/lazyspell/Ecommerce_Backend/models"
 	"github.com/lazyspell/Ecommerce_Backend/repository"
 	"github.com/lazyspell/Ecommerce_Backend/repository/dbrepo"
-	"github.com/lazyspell/Ecommerce_Backend/utils"
-	"golang.org/x/crypto/bcrypt"
 )
 
 var Repo *Repository
@@ -34,82 +25,56 @@ func NewHandler(r *Repository) {
 	Repo = r
 }
 
-func (m *Repository) GetAllCategories(w http.ResponseWriter, r *http.Request) {
-	categories, err := m.DB.AllCategories()
-	if err != nil {
-		helpers.ServerError(w, err)
-	}
+// func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
+// 	var payload models.Users
+// 	err := json.NewDecoder(r.Body).Decode(&payload)
+// 	if err != nil {
+// 		helpers.BadRequest400(w, "Bad Request After Getting Body")
+// 		return
+// 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(categories)
-}
+// 	if !validMailAddress(payload.Email) {
+// 		helpers.BadRequest400(w, "Invalid Email Address Given")
+// 		return
+// 	}
 
-func (m *Repository) GetCategoryById(w http.ResponseWriter, r *http.Request) {
-	var payload models.Categories
-	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		log.Println(err)
-	}
+// 	var user models.Users
 
-	category, err := m.DB.CategoryById(payload.Id)
-	if err != nil {
-		helpers.ServerError(w, err)
-	}
+// 	user.FirstName = payload.FirstName
+// 	user.LastName = payload.LastName
+// 	user.Email = payload.Email
+// 	user.Password, _ = hashPassword(payload.Password)
+// 	_, err = m.DB.NewUserDB(user)
+// 	if err != nil {
+// 		helpers.ServerError(w, err)
+// 		return
+// 	}
 
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(category)
-}
+// 	helpers.Create201(w)
+// }
 
-func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
-	var payload models.Users
-	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		helpers.BadRequest400(w, "Bad Request After Getting Body")
-		return
-	}
+// func hashPassword(password string) (string, error) {
+// 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+// 	return string(bytes), err
+// }
 
-	if !validMailAddress(payload.Email) {
-		helpers.BadRequest400(w, "Invalid Email Address Given")
-		return
-	}
+// func checkPasswordHash(password, hash string) bool {
+// 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+// 	return err == nil
+// }
+// func validMailAddress(address string) bool {
+// 	_, err := mail.ParseAddress(address)
+// 	if err != nil {
+// 		return false
+// 	}
+// 	return true
+// }
 
-	var user models.Users
+// func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
+// 	oauthState := utils.GenerateStateOauthCookie(w)
 
-	user.FirstName = payload.FirstName
-	user.LastName = payload.LastName
-	user.Email = payload.Email
-	user.Password, _ = hashPassword(payload.Password)
-	_, err = m.DB.NewUserDB(user)
-	if err != nil {
-		helpers.ServerError(w, err)
-		return
-	}
+// 	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
 
-	helpers.Create201(w)
-}
+// 	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
 
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func checkPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-func validMailAddress(address string) bool {
-	_, err := mail.ParseAddress(address)
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
-	oauthState := utils.GenerateStateOauthCookie(w)
-
-	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
-
-	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
-
-}
+// }

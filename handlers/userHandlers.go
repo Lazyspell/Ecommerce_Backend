@@ -1,31 +1,67 @@
 package handlers
 
-// import (
-// 	"encoding/json"
-// 	"log"
-// 	"net/http"
+import (
+	"encoding/json"
+	"net/http"
+	"net/mail"
 
-// 	"github.com/lazyspell/Ecommerce_Backend/models"
-// )
+	"github.com/lazyspell/Ecommerce_Backend/config"
+	"github.com/lazyspell/Ecommerce_Backend/helpers"
+	"github.com/lazyspell/Ecommerce_Backend/models"
+	"github.com/lazyspell/Ecommerce_Backend/utils"
+	"golang.org/x/crypto/bcrypt"
+)
 
-// func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) string {
-// 	var payload models.Users
-// 	err := json.NewDecoder(r.Body).Decode(&payload)
-// 	if err != nil {
-// 		log.Println(err)
-// 	}
+func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
+	var payload models.Users
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		helpers.BadRequest400(w, "Bad Request After Getting Body")
+		return
+	}
 
-// 	var user models.Users
+	if !validMailAddress(payload.Email) {
+		helpers.BadRequest400(w, "Invalid Email Address Given")
+		return
+	}
 
-// 	user.FirstName = payload.FirstName
-// 	user.LastName = payload.LastName
-// 	user.Email = payload.Email
-// 	user.Password = payload.Password
+	var user models.Users
 
-// 	_, err = m.DB.NewUserDB(payload)
-// 	if err != nil {
-// 		log.Println(err)
-// 	}
+	user.FirstName = payload.FirstName
+	user.LastName = payload.LastName
+	user.Email = payload.Email
+	user.Password, _ = hashPassword(payload.Password)
+	_, err = m.DB.NewUserDB(user)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
 
-// 	return "Success"
-// }
+	helpers.Create201(w)
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func checkPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
+func validMailAddress(address string) bool {
+	_, err := mail.ParseAddress(address)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
+	oauthState := utils.GenerateStateOauthCookie(w)
+
+	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
+
+	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
+
+}

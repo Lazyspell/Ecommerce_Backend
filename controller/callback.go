@@ -2,8 +2,10 @@ package controller
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 
 	"github.com/lazyspell/Ecommerce_Backend/config"
@@ -50,6 +52,28 @@ func GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// send back response to browser
+	// // send back response to browser
 	fmt.Fprintln(w, string(contents))
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(contents)
+
+	type GoogleObject struct {
+		ID        string
+		Email     string
+		Verified  bool
+		Name      string
+		GivenName string
+		Picture   string
+		Locale    string
+	}
+
+	var googleObject GoogleObject
+
+	if err := json.Unmarshal(contents, &googleObject); err != nil {
+		log.Println(err)
+	}
+
+	fmt.Println(googleObject.Email)
+
 }
