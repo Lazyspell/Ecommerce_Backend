@@ -12,6 +12,7 @@ import (
 	"github.com/lazyspell/Ecommerce_Backend/models"
 	"github.com/lazyspell/Ecommerce_Backend/repository"
 	"github.com/lazyspell/Ecommerce_Backend/repository/dbrepo"
+	"github.com/lazyspell/Ecommerce_Backend/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -81,6 +82,7 @@ func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 	_, err = m.DB.NewUserDB(user)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
 	}
 
 	helpers.Create201(w)
@@ -101,4 +103,13 @@ func validMailAddress(address string) bool {
 		return false
 	}
 	return true
+}
+
+func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
+	oauthState := utils.GenerateStateOauthCookie(w)
+
+	u := config.Config.GoogleLoginConfig.AuthCodeURL(oauthState)
+
+	http.Redirect(w, r, u, http.StatusTemporaryRedirect)
+
 }
