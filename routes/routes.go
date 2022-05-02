@@ -27,5 +27,7 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	mux.Post("/users/new", handlers.Repo.NewUser)
 
+	mux.Delete("/users/delete", handlers.Repo.DeleteUser)
+
 	return mux
 }

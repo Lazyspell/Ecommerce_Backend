@@ -104,3 +104,17 @@ func (m *postgresDBRepo) GetPassword(id int) (models.Users, error) {
 
 	return hashedpass, err
 }
+
+func (m *postgresDBRepo) DeleteUserDB(id int) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `delete from users where id=$1`
+
+	m.DB.QueryRowContext(ctx, query, id)
+
+	log.Println()
+
+	return "success", nil
+
+}

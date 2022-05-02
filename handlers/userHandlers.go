@@ -67,6 +67,17 @@ func (m *Repository) GetUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	var payload models.Users
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		helpers.BadRequest400(w, "Bad Request Check the body")
+		return
+	}
+
+	_, err = m.DB.DeleteUserDB(payload.Id)
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("Success")
 
 }
 

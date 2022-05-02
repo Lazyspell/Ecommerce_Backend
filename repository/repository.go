@@ -9,4 +9,5 @@ type DatabaseRepo interface {
 	GetPassword(id int) (models.Users, error)
 	AllUsers() ([]models.Users, error)
 	UserById(id int) (models.Users, error)
+	DeleteUserDB(id int) (string, error)
 }
