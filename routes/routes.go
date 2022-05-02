@@ -22,6 +22,9 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux.Get("/google_callback", handlers.Repo.GoogleCallback)
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
 	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
+	mux.Get("/users/all", handlers.Repo.GetAllUsers)
+	mux.Get("/users/id", handlers.Repo.GetUserById)
+
 	mux.Post("/users/new", handlers.Repo.NewUser)
 
 	return mux

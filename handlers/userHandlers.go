@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"net/mail"
 
@@ -36,6 +37,41 @@ func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helpers.Create201(w)
+}
+
+func (m *Repository) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := m.DB.AllUsers()
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(users)
+
+}
+
+func (m *Repository) GetUserById(w http.ResponseWriter, r *http.Request) {
+	var payload models.Users
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		log.Println(err)
+	}
+
+	user, err := m.DB.UserById(payload.Id)
+	if err != nil {
+		helpers.ServerError(w, err)
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(user)
+}
+
+func (m *Repository) DeleteUser(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
+
 }
 
 func hashPassword(password string) (string, error) {

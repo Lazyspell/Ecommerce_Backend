@@ -26,6 +26,7 @@ func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	oauthState, _ := r.Cookie("oauthstate")
 	state := r.FormValue("state")
 	code := r.FormValue("code")
+
 	w.Header().Add("content-type", "application/json")
 
 	// ERROR : Invalid OAuth State
@@ -83,7 +84,5 @@ func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	if err := json.Unmarshal(contents, &googleObject); err != nil {
 		log.Println(err)
 	}
-
-	fmt.Println(googleObject.Email)
 
 }

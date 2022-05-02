@@ -7,4 +7,6 @@ type DatabaseRepo interface {
 	CategoryById(id int) (models.Categories, error)
 	NewUserDB(user models.Users) (string, error)
 	GetPassword(id int) (models.Users, error)
+	AllUsers() ([]models.Users, error)
+	UserById(id int) (models.Users, error)
 }
