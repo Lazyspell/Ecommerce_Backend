@@ -14,16 +14,14 @@ type AppConfig struct {
 	InProduction      bool
 	Port              int
 	Env               string
-	DB                struct {
+
+	DB struct {
 		DbHost string
 		DbName string
 		DbUser string
 		DbPass string
 		DbPort string
 		DbSSL  string
-	}
-
-	Jwt struct {
 	}
 }
 
