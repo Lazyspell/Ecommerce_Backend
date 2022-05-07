@@ -22,12 +22,10 @@ func (m *postgresDBRepo) AllUsers() ([]models.Users, error) {
 	if err != nil {
 		return users, err
 	}
-	log.Println(2)
 
 	defer rows.Close()
 
 	for rows.Next() {
-		log.Println(3)
 
 		var people models.Users
 		err := rows.Scan(

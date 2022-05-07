@@ -15,7 +15,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 	}))
 
 	mux.Get("/google_login", handlers.Repo.GoogleLogin)

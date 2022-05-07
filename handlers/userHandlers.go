@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/mail"
 
@@ -14,15 +13,15 @@ import (
 func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 	var payload models.Users
 	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		helpers.BadRequest400(w, "Bad Request After Getting Body")
-		return
-	}
+	// if err != nil {
+	// 	helpers.badRequest400(w, "invalid type please check request body")
+	// 	return
+	// }
 
-	if !validMailAddress(payload.Email) {
-		helpers.BadRequest400(w, "Invalid Email Address Given")
-		return
-	}
+	// if !validMailAddress(payload.Email) {
+	// 	helpers.badRequest400(w, "Invalid Email Address Given")
+	// 	return
+	// }
 
 	var user models.Users
 
@@ -53,13 +52,26 @@ func (m *Repository) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) GetUserById(w http.ResponseWriter, r *http.Request) {
 	var payload models.Users
 	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		log.Println(err)
+
+	if !helpers.CheckValidPayload(err, w, payload) {
+		return
+	}
+
+	if payload.Id == 0 {
+		helpers.CheckValidId(w, payload)
+		return
 	}
 
 	user, err := m.DB.UserById(payload.Id)
 	if err != nil {
 		helpers.ServerError(w, err)
+		return
+	}
+
+	if user.Id == 0 {
+
+		helpers.NoContent204(w, "No Document Retrived")
+		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
@@ -69,20 +81,44 @@ func (m *Repository) GetUserById(w http.ResponseWriter, r *http.Request) {
 func (m *Repository) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var payload models.Users
 	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		helpers.BadRequest400(w, "Bad Request Check the body")
-		return
-	}
+	// if err != nil {
+	// 	helpers.badRequest400(w, "invalid type please check request body")
+	// 	return
+	// }
 
 	_, err = m.DB.DeleteUserDB(payload.Id)
+	if err != nil {
 
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("Success")
+	}
+
+	helpers.DeleteSuccessContent(w)
+	return
 
 }
 
 func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
+	var payload models.Users
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		return
+	}
+	// if err != nil {
+	// 	helpers.badRequest400(w, "Unable to decode request body please check request body")
+	// 	return
+	// }
 
+	// if payload.Email == "" {
+	// 	helpers.badRequest400(w, "Email parameter not present in request body. check request body contents")
+	// 	return
+	// }
+
+	// if payload.Password == "" {
+	// 	helpers.badRequest400(w, "Password parameter not present in request body. check request body contents")
+	// 	return
+	// }
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(payload)
 }
 
 func hashPassword(password string) (string, error) {
