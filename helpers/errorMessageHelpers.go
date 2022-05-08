@@ -19,7 +19,7 @@ func Create201(w http.ResponseWriter) {
 	json.NewEncoder(w).Encode("Success")
 }
 
-func badRequest400(w http.ResponseWriter, message string) {
+func BadRequest400(w http.ResponseWriter, message string) {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(message)
