@@ -13,11 +13,3 @@ func CheckValidId(w http.ResponseWriter, payload models.Users) bool {
 	}
 	return true
 }
-
-func CheckValidPayload(err error, w http.ResponseWriter, payload models.Users) bool {
-	if err != nil {
-		BadRequest400(w, "invalid type please check request body")
-		return false
-	}
-	return true
-}

@@ -2,9 +2,12 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-chi/jwtauth/v5"
+	"github.com/lazyspell/Ecommerce_Backend/models"
 )
 
 var password = "Elaine I will love you forever and always"
@@ -51,4 +54,15 @@ func ParseToken(signedToken string) (*UserClaims, error) {
 	}
 
 	return verifiedToken.Claims.(*UserClaims), nil
+}
+
+func jwtToken(user models.Users) (string, error) {
+	tokenAuth := jwtauth.New("HS256", key, nil)
+	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"first_name": user.FirstName})
+	if err != nil {
+		log.Println("issue generating the token")
+	}
+
+	return tokenString, nil
+
 }
