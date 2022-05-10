@@ -2,7 +2,6 @@ package dbrepo
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/lazyspell/Ecommerce_Backend/models"
@@ -17,7 +16,6 @@ func (m *postgresDBRepo) AllUsers() ([]models.Users, error) {
 	query := `select id, first_name, last_name, email from users`
 
 	rows, err := m.DB.QueryContext(ctx, query)
-	log.Println(rows)
 
 	if err != nil {
 		return users, err
@@ -77,31 +75,30 @@ func (m *postgresDBRepo) NewUserDB(user models.Users) (string, error) {
 
 	_, err := m.DB.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password)
 	if err != nil {
-		log.Println(err)
 		return "failed", err
 	}
 	return "success", err
 
 }
 
-func (m *postgresDBRepo) GetPassword(id int) (models.Users, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
+// func (m *postgresDBRepo) GetPassword(id int) (models.Users, error) {
+// 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+// 	defer cancel()
 
-	var hashedpass models.Users
+// 	var hashedpass models.Users
 
-	query := `select password from users where id = $1`
+// 	query := `select password from users where id = $1`
 
-	data := m.DB.QueryRowContext(ctx, query, id)
-	err := data.Scan(
-		&hashedpass.Password,
-	)
-	if err != nil {
-		log.Println(err)
-	}
+// 	data := m.DB.QueryRowContext(ctx, query, id)
+// 	err := data.Scan(
+// 		&hashedpass.Password,
+// 	)
+// 	if err != nil {
 
-	return hashedpass, err
-}
+// 	}
+
+// 	return hashedpass, err
+// }
 
 func (m *postgresDBRepo) DeleteUserDB(id int) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -110,8 +107,6 @@ func (m *postgresDBRepo) DeleteUserDB(id int) (string, error) {
 	query := `delete from users where id=$1`
 
 	m.DB.QueryRowContext(ctx, query, id)
-
-	log.Println()
 
 	return "success", nil
 

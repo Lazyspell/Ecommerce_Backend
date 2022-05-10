@@ -36,3 +36,9 @@ func DeleteSuccessContent(w http.ResponseWriter) {
 	w.Header().Add("Content-Type", "application/json")
 	json.NewEncoder(w).Encode("Success")
 }
+
+func UnAuthenticated(w http.ResponseWriter, message string) {
+	w.WriteHeader(http.StatusUnauthorized)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(message)
+}

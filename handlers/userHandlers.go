@@ -2,14 +2,11 @@ package handlers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"net/mail"
 
-	"github.com/go-chi/jwtauth"
 	"github.com/lazyspell/Ecommerce_Backend/helpers"
 	"github.com/lazyspell/Ecommerce_Backend/models"
-	"github.com/lazyspell/Ecommerce_Backend/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -42,13 +39,6 @@ func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) GetAllUsers(w http.ResponseWriter, r *http.Request) {
-	_, claims, err := jwtauth.FromContext(r.Context())
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	log.Println(claims["first_name"])
 	users, err := m.DB.AllUsers()
 	if err != nil {
 		helpers.ServerError(w, err)
@@ -104,30 +94,6 @@ func (m *Repository) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	helpers.DeleteSuccessContent(w)
 	return
 
-}
-
-func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
-	var payload models.Users
-	err := json.NewDecoder(r.Body).Decode(&payload)
-	if err != nil {
-		helpers.BadRequest400(w, "Unable to decode request body please check request body")
-		return
-	}
-
-	if payload.Email == "" {
-		helpers.BadRequest400(w, "Email parameter not present in request body. check request body contents")
-		return
-	}
-
-	utils.GenerateStateJwtCookie(w, payload)
-
-	// if payload.Password == "" {
-	// 	helpers.BadRequest400(w, "Password parameter not present in request body. check request body contents")
-	// 	return
-	// }
-
-	// w.Header().Add("Content-Type", "application/json")
-	// json.NewEncoder(w).Encode(payload)
 }
 
 func hashPassword(password string) (string, error) {
