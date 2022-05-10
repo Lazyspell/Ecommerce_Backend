@@ -6,6 +6,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v1.5.4
 	github.com/go-chi/cors v1.2.1
+	github.com/go-chi/jwtauth/v5 v5.0.2
 	github.com/jackc/pgconn v1.12.0
 	github.com/jackc/pgx/v4 v4.16.0
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
@@ -14,7 +15,6 @@ require (
 require (
 	cloud.google.com/go v0.65.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.0-20210816181553-5444fa50b93d // indirect
-	github.com/go-chi/jwtauth/v5 v5.0.2 // indirect
 	github.com/goccy/go-json v0.7.6 // indirect
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.8 // indirect
