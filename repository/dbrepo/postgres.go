@@ -2,7 +2,6 @@ package dbrepo
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/lazyspell/Ecommerce_Backend/models"
@@ -17,7 +16,6 @@ func (m *postgresDBRepo) AllCategories() ([]models.Categories, error) {
 	query := `select id, title, image_url from categories order by id`
 
 	rows, err := m.DB.QueryContext(ctx, query)
-	log.Println(rows)
 
 	if err != nil {
 		return categories, err
