@@ -33,7 +33,7 @@ func CreateToken(c *UserClaims) (string, error) {
 	t := jwt.NewWithClaims(jwt.SigningMethodES512, c)
 	signedToken, err := t.SignedString(key)
 	if err != nil {
-		return "", fmt.Errorf("Error in createToken when signing token %w", err)
+		return "", fmt.Errorf("error in createToken when signing token %w", err)
 	}
 	return signedToken, nil
 
@@ -47,10 +47,10 @@ func ParseToken(signedToken string) (*UserClaims, error) {
 		return key, nil
 	})
 	if err != nil {
-		return nil, fmt.Errorf("Error in parseToken")
+		return nil, fmt.Errorf("error in parseToken")
 	}
 	if !verifiedToken.Valid {
-		return nil, fmt.Errorf("Error in parseToken")
+		return nil, fmt.Errorf("error in parseToken")
 	}
 
 	return verifiedToken.Claims.(*UserClaims), nil
