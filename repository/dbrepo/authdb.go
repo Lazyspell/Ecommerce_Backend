@@ -30,3 +30,26 @@ func (m *postgresDBRepo) Authenticate(email string) (models.Users, error) {
 
 	return user, nil
 }
+
+func (m *postgresDBRepo) GoogleAuthenticate(email string) (models.GoogleObject, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var user models.GoogleObject
+
+	query := `select id, email, name, given_name from google_user where email = $1`
+
+	person := m.DB.QueryRowContext(ctx, query, email)
+
+	err := person.Scan(
+		&user.ID,
+		&user.Email,
+		&user.Name,
+		&user.GivenName,
+	)
+	if err != nil {
+		return user, err
+	}
+
+	return user, nil
+}

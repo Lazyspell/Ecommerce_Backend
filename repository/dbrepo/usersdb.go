@@ -77,28 +77,22 @@ func (m *postgresDBRepo) NewUserDB(user models.Users) (string, error) {
 	if err != nil {
 		return "failed", err
 	}
-	return "success", err
+	return "success", nil
 
 }
 
-// func (m *postgresDBRepo) GetPassword(id int) (models.Users, error) {
-// 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-// 	defer cancel()
+func (m *postgresDBRepo) NewGoogleUserDB(googleUser models.GoogleObject) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
-// 	var hashedpass models.Users
+	query := `insert into google_user (email, name, given_name) values ($1, $2, $3)`
+	_, err := m.DB.ExecContext(ctx, query, googleUser.Email, googleUser.Name, googleUser.GivenName)
+	if err != nil {
+		return "failed", err
+	}
+	return "success", nil
 
-// 	query := `select password from users where id = $1`
-
-// 	data := m.DB.QueryRowContext(ctx, query, id)
-// 	err := data.Scan(
-// 		&hashedpass.Password,
-// 	)
-// 	if err != nil {
-
-// 	}
-
-// 	return hashedpass, err
-// }
+}
 
 func (m *postgresDBRepo) DeleteUserDB(id int) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)

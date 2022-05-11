@@ -9,6 +9,8 @@ import (
 	"net/http"
 
 	"github.com/lazyspell/Ecommerce_Backend/config"
+	"github.com/lazyspell/Ecommerce_Backend/helpers"
+	"github.com/lazyspell/Ecommerce_Backend/models"
 	"github.com/lazyspell/Ecommerce_Backend/utils"
 )
 
@@ -63,26 +65,29 @@ func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// // send back response to browser
-	fmt.Fprintln(w, string(contents))
-
-	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(contents)
-
-	type GoogleObject struct {
-		ID        string
-		Email     string
-		Verified  bool
-		Name      string
-		GivenName string
-		Picture   string
-		Locale    string
-	}
-
-	var googleObject GoogleObject
+	var googleObject models.GoogleObject
 
 	if err := json.Unmarshal(contents, &googleObject); err != nil {
 		log.Println(err)
 	}
 
+	authUser, err := m.DB.GoogleAuthenticate(googleObject.Email)
+	if err != nil {
+		_, err := m.DB.NewGoogleUserDB(googleObject)
+		if err != nil {
+			helpers.ServerError(w, err)
+		}
+		authUser, _ = m.DB.GoogleAuthenticate(googleObject.Email)
+	}
+
+	utils.GenerateGoogleJwtCookie(w, authUser)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(contents)
+
 }
+
+// func newGoogleUser(googleUser models.GoogleObject){
+
+// 	googleUser.
+
+// }

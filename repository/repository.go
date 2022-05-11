@@ -12,5 +12,8 @@ type DatabaseRepo interface {
 	UserById(id int) (models.Users, error)
 	DeleteUserDB(id int) (string, error)
 
+	NewGoogleUserDB(googleUser models.GoogleObject) (string, error)
+	GoogleAuthenticate(email string) (models.GoogleObject, error)
+
 	Authenticate(email string) (models.Users, error)
 }

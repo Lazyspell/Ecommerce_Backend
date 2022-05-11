@@ -48,3 +48,25 @@ func GenerateStateJwtCookie(w http.ResponseWriter, user models.Users) string {
 	return state
 
 }
+
+func GenerateGoogleJwtCookie(w http.ResponseWriter, user models.GoogleObject) string {
+
+	var expiration = time.Now().Add(2 * time.Minute)
+
+	state, err := googleJwtToken(user)
+	if err != nil {
+		log.Println(err)
+		return state
+	}
+
+	cookie := http.Cookie{
+		Name:     "jwt",
+		Value:    state,
+		Expires:  expiration,
+		HttpOnly: true,
+	}
+	http.SetCookie(w, &cookie)
+
+	return state
+
+}

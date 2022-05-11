@@ -66,3 +66,14 @@ func jwtToken(user models.Users) (string, error) {
 	return tokenString, nil
 
 }
+
+func googleJwtToken(user models.GoogleObject) (string, error) {
+	tokenAuth := jwtauth.New("HS256", key, nil)
+	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"name": user.Name})
+	if err != nil {
+		log.Println("issue generating the token")
+	}
+
+	return tokenString, nil
+
+}
