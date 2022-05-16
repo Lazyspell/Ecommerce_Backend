@@ -23,6 +23,29 @@ func (m *Repository) GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (m *Repository) GoogleUserLogin(w http.ResponseWriter, r *http.Request) {
+	var payload models.GoogleObject
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		helpers.BadRequest400(w, "invalid type please check request body")
+		return
+	}
+
+	authUser, err := m.DB.GoogleAuthenticate(payload.Email)
+	if err != nil {
+		_, err := m.DB.NewGoogleUserDB(payload)
+		if err != nil {
+			helpers.ServerError(w, err)
+		}
+		authUser, _ = m.DB.GoogleAuthenticate(payload.Email)
+	}
+
+	utils.GenerateGoogleJwtCookie(w, authUser)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("logged in")
+
+}
+
 func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	// get oauth state from cookie for this user
 	oauthState, _ := r.Cookie("oauthstate")

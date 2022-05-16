@@ -9,10 +9,10 @@ type Users struct {
 }
 
 type GoogleObject struct {
-	ID        string
-	Email     string
+	ID        string `json:"id"`
+	Email     string `json:"email"`
 	Verified  bool
-	Name      string
+	Name      string `json:"name"`
 	GivenName string
 	Picture   string
 	Locale    string

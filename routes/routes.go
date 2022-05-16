@@ -17,8 +17,14 @@ func Routes(app *config.AppConfig) http.Handler {
 	config.LoadConfig()
 	mux := chi.NewRouter()
 	mux.Use(cors.Handler(cors.Options{
+		// AllowedOrigins: []string{"http://localhost:3000"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"https://*", "http://*"},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedMethods:   []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
 	mux.Group(func(r chi.Router) {
@@ -35,14 +41,14 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	mux.Post("/login", handlers.Repo.LoginUser)
 
-	mux.Get("/google_login", handlers.Repo.GoogleLogin)
+	mux.Post("/google_login", handlers.Repo.GoogleUserLogin)
 	mux.Get("/google_callback", handlers.Repo.GoogleCallback)
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
 	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
 
 	mux.Get("/users/id", handlers.Repo.GetUserById)
 	mux.Post("/users/new", handlers.Repo.NewUser)
-	// mux.Get("/users/all", handlers.Repo.GetAllUsers)
+	mux.Get("/users/all", handlers.Repo.GetAllUsers)
 
 	return mux
 }
