@@ -18,7 +18,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 	mux.Use(cors.Handler(cors.Options{
 		// AllowedOrigins: []string{"http://localhost:3000"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
+		AllowedOrigins: []string{"https://*", "http://*", "http://localhost*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"POST", "GET", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
@@ -42,6 +42,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux.Post("/login", handlers.Repo.LoginUser)
 
 	mux.Post("/google_login", handlers.Repo.GoogleUserLogin)
+	mux.Get("/google_login_test", handlers.Repo.GoogleLogin)
 	mux.Get("/google_callback", handlers.Repo.GoogleCallback)
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
 	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
