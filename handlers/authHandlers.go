@@ -48,7 +48,7 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	utils.GenerateStateJwtCookie(w, authUser)
 
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(payload)
+	json.NewEncoder(w).Encode("")
 }
 
 //not working properly need to fix
