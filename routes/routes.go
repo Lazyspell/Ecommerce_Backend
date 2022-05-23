@@ -27,16 +27,27 @@ func Routes(app *config.AppConfig) http.Handler {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	mux.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("admin"), nil)))
-		r.Use(jwtauth.Authenticator)
-		r.Get("/users/all", handlers.Repo.GetAllUsers)
-		r.Delete("/users/delete", handlers.Repo.DeleteUser)
+	mux.Group(func(admin chi.Router) {
+		admin.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("admin"), nil)))
+		admin.Use(jwtauth.Authenticator)
+		admin.Delete("/admin/users/delete", handlers.Repo.DeleteUser)
+		admin.Get("/admin/users/all", handlers.Repo.GetAllUsers)
+		admin.Get("/admin/users/id", handlers.Repo.GetUserById)
+
 	})
 
-	mux.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte(password), nil)))
-		r.Use(jwtauth.Authenticator)
+	mux.Group(func(manager chi.Router) {
+		manager.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("manager"), nil)))
+		manager.Use(jwtauth.Authenticator)
+
+		manager.Get("/manager/users/all", handlers.Repo.GetAllUsers)
+		manager.Get("/users/id", handlers.Repo.GetUserById)
+
+	})
+
+	mux.Group(func(manager chi.Router) {
+		manager.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("user"), nil)))
+		manager.Use(jwtauth.Authenticator)
 
 	})
 
@@ -48,7 +59,6 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
 	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
 
-	mux.Get("/users/id", handlers.Repo.GetUserById)
 	mux.Post("/users/new", handlers.Repo.NewUser)
 	// mux.Get("/users/all", handlers.Repo.GetAllUsers)
 
