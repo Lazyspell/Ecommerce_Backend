@@ -24,6 +24,7 @@ func (m *postgresDBRepo) Authenticate(email string) (models.Users, error) {
 		&user.Email,
 		&user.Password,
 	)
+
 	if err != nil {
 		return user, err
 	}

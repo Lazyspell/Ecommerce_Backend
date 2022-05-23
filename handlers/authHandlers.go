@@ -36,7 +36,7 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	authUser, err := m.DB.Authenticate(payload.Email)
 	if err != nil {
-		helpers.ServerError(w, err)
+		helpers.BadRequest400(w, "No User Found")
 		return
 	}
 
