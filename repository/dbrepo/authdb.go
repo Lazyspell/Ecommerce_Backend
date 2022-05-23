@@ -13,7 +13,7 @@ func (m *postgresDBRepo) Authenticate(email string) (models.Users, error) {
 
 	var user models.Users
 
-	query := `select id, first_name, last_name, email, password from users where email = $1`
+	query := `select id, first_name, last_name, email, password, "authorization" from users where email = $1`
 
 	person := m.DB.QueryRowContext(ctx, query, email)
 
@@ -23,6 +23,7 @@ func (m *postgresDBRepo) Authenticate(email string) (models.Users, error) {
 		&user.LastName,
 		&user.Email,
 		&user.Password,
+		&user.Authorization,
 	)
 
 	if err != nil {

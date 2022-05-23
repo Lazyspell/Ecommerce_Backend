@@ -57,7 +57,7 @@ func ParseToken(signedToken string) (*UserClaims, error) {
 }
 
 func jwtToken(user models.Users) (string, error) {
-	tokenAuth := jwtauth.New("HS256", key, nil)
+	tokenAuth := jwtauth.New("HS256", []byte(user.Authorization), nil)
 	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"first_name": user.FirstName})
 	if err != nil {
 		log.Println("issue generating the token")

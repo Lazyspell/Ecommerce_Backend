@@ -28,7 +28,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	}))
 
 	mux.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte(password), nil)))
+		r.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("admin"), nil)))
 		r.Use(jwtauth.Authenticator)
 		r.Get("/users/all", handlers.Repo.GetAllUsers)
 		r.Delete("/users/delete", handlers.Repo.DeleteUser)
@@ -37,6 +37,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux.Group(func(r chi.Router) {
 		r.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte(password), nil)))
 		r.Use(jwtauth.Authenticator)
+
 	})
 
 	mux.Post("/login", handlers.Repo.LoginUser)
@@ -49,7 +50,7 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	mux.Get("/users/id", handlers.Repo.GetUserById)
 	mux.Post("/users/new", handlers.Repo.NewUser)
-	mux.Get("/users/all", handlers.Repo.GetAllUsers)
+	// mux.Get("/users/all", handlers.Repo.GetAllUsers)
 
 	return mux
 }
