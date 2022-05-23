@@ -8,8 +8,8 @@ type DatabaseRepo interface {
 
 	NewUserDB(user models.Users) (string, error)
 	// GetPassword(id int) (models.Users, error)
-	AllUsers() ([]models.Users, error)
-	UserById(id int) (models.Users, error)
+	AllUsers() ([]models.DisplayUser, error)
+	UserById(id int) (models.DisplayUser, error)
 	DeleteUserDB(id int) (string, error)
 
 	NewGoogleUserDB(googleUser models.GoogleObject) (string, error)
