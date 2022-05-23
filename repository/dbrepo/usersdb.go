@@ -7,11 +7,11 @@ import (
 	"github.com/lazyspell/Ecommerce_Backend/models"
 )
 
-func (m *postgresDBRepo) AllUsers() ([]models.Users, error) {
+func (m *postgresDBRepo) AllUsers() ([]models.DisplayUser, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	var users []models.Users
+	var users []models.DisplayUser
 
 	query := `select id, first_name, last_name, email from users`
 
@@ -25,7 +25,7 @@ func (m *postgresDBRepo) AllUsers() ([]models.Users, error) {
 
 	for rows.Next() {
 
-		var people models.Users
+		var people models.DisplayUser
 		err := rows.Scan(
 			&people.Id,
 			&people.FirstName,
@@ -43,11 +43,11 @@ func (m *postgresDBRepo) AllUsers() ([]models.Users, error) {
 	return users, nil
 }
 
-func (m *postgresDBRepo) UserById(id int) (models.Users, error) {
+func (m *postgresDBRepo) UserById(id int) (models.DisplayUser, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	var user models.Users
+	var user models.DisplayUser
 
 	query := `select id, first_name, last_name, email from users where id = $1`
 
