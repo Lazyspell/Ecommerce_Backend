@@ -68,6 +68,30 @@ func (m *postgresDBRepo) UserById(id int) (models.DisplayUser, error) {
 
 }
 
+func (m *postgresDBRepo) UserByEmailDB(email string) (models.DisplayUser, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var user models.DisplayUser
+
+	query := `select id, first_name, last_name, email from users where email = $1`
+
+	person := m.DB.QueryRowContext(ctx, query, email)
+
+	err := person.Scan(
+		&user.Id,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+	)
+	if err != nil {
+		return user, nil
+	}
+
+	return user, nil
+
+}
+
 func (m *postgresDBRepo) NewUserDB(user models.Users) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -75,6 +99,23 @@ func (m *postgresDBRepo) NewUserDB(user models.Users) (string, error) {
 	query := `insert into users (first_name, last_name, email, password, created_at, updated_at, "authorization") values ($1, $2, $3, $4, $5, $6, $7)`
 
 	_, err := m.DB.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password, user.CreatedAt, user.UpdatedAt, user.Authorization)
+	if err != nil {
+		log.Println(err)
+		return "failed", err
+	}
+	return "success", nil
+
+}
+
+func (m *postgresDBRepo) UpdateUserDB(user models.Users) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE users
+				SET first_name = $2, last_name = $3, email = $4, password = $5, updated_at = $6, "authorization" = $7
+				WHERE id = $1`
+
+	_, err := m.DB.ExecContext(ctx, query, user.Id, user.FirstName, user.LastName, user.Email, user.Password, user.UpdatedAt, user.Authorization)
 	if err != nil {
 		log.Println(err)
 		return "failed", err

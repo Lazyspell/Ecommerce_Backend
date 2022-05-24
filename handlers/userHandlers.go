@@ -42,6 +42,41 @@ func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 	helpers.Create201(w)
 }
 
+func (m *Repository) UpdateUser(w http.ResponseWriter, r *http.Request) {
+	var payload models.Users
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		helpers.BadRequest400(w, "invalid type please check request body")
+		return
+	}
+	if !validMailAddress(payload.Email) {
+		helpers.BadRequest400(w, "Invalid Email Address Given")
+		return
+	}
+
+	user, err := m.DB.UserByEmailDB(payload.Email)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	if user.Email != "" {
+		if user.Id != payload.Id {
+			helpers.BadRequest400(w, "Email Address Already In Use")
+			return
+		}
+	}
+	value, err := m.DB.UpdateUserDB(payload)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(value)
+}
+
 func (m *Repository) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := m.DB.AllUsers()
 	if err != nil {
@@ -92,11 +127,13 @@ func (m *Repository) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	_, err = m.DB.DeleteUserDB(payload.Id)
 	if err != nil {
-
+		helpers.ServerError(w, err)
+		return
 	}
 
 	helpers.DeleteSuccessContent(w)
-	return
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("deleted")
 
 }
 

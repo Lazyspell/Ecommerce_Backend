@@ -51,6 +51,8 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	})
 
+	mux.Post("/user/update", handlers.Repo.UpdateUser)
+
 	mux.Post("/login", handlers.Repo.LoginUser)
 
 	mux.Post("/google_login", handlers.Repo.GoogleUserLogin)
