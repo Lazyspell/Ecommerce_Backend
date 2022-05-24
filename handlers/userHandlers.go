@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/mail"
+	"time"
 
 	"github.com/lazyspell/Ecommerce_Backend/helpers"
 	"github.com/lazyspell/Ecommerce_Backend/models"
@@ -29,6 +30,9 @@ func (m *Repository) NewUser(w http.ResponseWriter, r *http.Request) {
 	user.LastName = payload.LastName
 	user.Email = payload.Email
 	user.Password, _ = hashPassword(payload.Password)
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
+	user.Authorization = "user"
 	_, err = m.DB.NewUserDB(user)
 	if err != nil {
 		helpers.ServerError(w, err)

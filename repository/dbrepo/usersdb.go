@@ -2,6 +2,7 @@ package dbrepo
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"github.com/lazyspell/Ecommerce_Backend/models"
@@ -71,10 +72,11 @@ func (m *postgresDBRepo) NewUserDB(user models.Users) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `insert into users (first_name, last_name, email, password) values ($1, $2, $3, $4)`
+	query := `insert into users (first_name, last_name, email, password, created_at, updated_at, "authorization") values ($1, $2, $3, $4, $5, $6, $7)`
 
-	_, err := m.DB.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password)
+	_, err := m.DB.ExecContext(ctx, query, user.FirstName, user.LastName, user.Email, user.Password, user.CreatedAt, user.UpdatedAt, user.Authorization)
 	if err != nil {
+		log.Println(err)
 		return "failed", err
 	}
 	return "success", nil

@@ -41,7 +41,7 @@ func Routes(app *config.AppConfig) http.Handler {
 		manager.Use(jwtauth.Authenticator)
 
 		manager.Get("/manager/users/all", handlers.Repo.GetAllUsers)
-		manager.Get("/users/id", handlers.Repo.GetUserById)
+		manager.Get("/manager/users/id", handlers.Repo.GetUserById)
 
 	})
 
