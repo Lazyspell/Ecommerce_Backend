@@ -105,7 +105,7 @@ func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 
 	utils.GenerateGoogleJwtCookie(w, authUser)
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(contents)
+	json.NewEncoder(w).Encode(authUser)
 
 }
 
