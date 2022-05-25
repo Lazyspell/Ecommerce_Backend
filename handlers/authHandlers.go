@@ -13,6 +13,7 @@ import (
 
 func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	var payload models.Users
+	var displayUser models.DisplayUser
 
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -47,8 +48,15 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	utils.GenerateStateJwtCookie(w, authUser)
 
+	displayUser.Id = authUser.Id
+	displayUser.FirstName = authUser.FirstName
+	displayUser.LastName = authUser.LastName
+	displayUser.Email = authUser.Email
+	displayUser.CreatedAt = authUser.CreatedAt
+	displayUser.UpdatedAt = authUser.UpdatedAt
+
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode("")
+	json.NewEncoder(w).Encode(displayUser)
 }
 
 //not working properly need to fix
