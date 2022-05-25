@@ -2,14 +2,17 @@ package helpers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
 func ServerError(w http.ResponseWriter, err error) {
 	// trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
-	log.Println(err)
-	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+	// log.Println(err)
+	// http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+
+	w.WriteHeader(http.StatusInternalServerError)
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(err)
 }
 
 func Create201(w http.ResponseWriter) {
