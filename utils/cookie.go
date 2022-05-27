@@ -29,7 +29,7 @@ func GenerateStateOauthCookie(w http.ResponseWriter) string {
 
 func GenerateStateJwtCookie(w http.ResponseWriter, user models.Users) string {
 
-	var expiration = time.Now().Add(2 * time.Minute)
+	// var expiration = time.Now().Add(2 * time.Minute)
 
 	state, err := jwtToken(user)
 	if err != nil {
@@ -38,9 +38,9 @@ func GenerateStateJwtCookie(w http.ResponseWriter, user models.Users) string {
 	}
 
 	cookie := http.Cookie{
-		Name:     "jwt",
-		Value:    state,
-		Expires:  expiration,
+		Name:  "jwt",
+		Value: state,
+		// Expires:  expiration,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, &cookie)
