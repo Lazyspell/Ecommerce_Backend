@@ -59,6 +59,10 @@ func (m *Repository) LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(displayUser)
 }
 
+func (m *Repository) LogOutUser(w http.ResponseWriter, r *http.Request) {
+	utils.ClearSession(w)
+}
+
 //not working properly need to fix
 func compareHashPassword(password string, hashedPassword []byte) bool {
 	err := bcrypt.CompareHashAndPassword(hashedPassword, []byte(password))

@@ -49,6 +49,15 @@ func GenerateStateJwtCookie(w http.ResponseWriter, user models.Users) string {
 
 }
 
+func ClearSession(r http.ResponseWriter) {
+	cookie := &http.Cookie{
+		Name:   "jwt",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(r, cookie)
+}
+
 func GenerateGoogleJwtCookie(w http.ResponseWriter, user models.GoogleObject) string {
 
 	var expiration = time.Now().Add(2 * time.Minute)
