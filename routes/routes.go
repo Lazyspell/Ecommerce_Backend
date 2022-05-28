@@ -53,17 +53,24 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	mux.Post("/user/update", handlers.Repo.UpdateUser)
 
+	//Auth routes
 	mux.Post("/login", handlers.Repo.LoginUser)
 	mux.Post("/logout", handlers.Repo.LogOutUser)
 
+	//Google Routes
 	mux.Post("/google_login", handlers.Repo.GoogleUserLogin)
 	mux.Get("/google_login_test", handlers.Repo.GoogleLogin)
 	mux.Get("/google_callback", handlers.Repo.GoogleCallback)
+
+	//Categories Routes
 	mux.Get("/categories", handlers.Repo.GetAllCategories)
 	mux.Get("/categories/id", handlers.Repo.GetCategoryById)
 
 	mux.Post("/users/new", handlers.Repo.NewUser)
 	// mux.Get("/users/all", handlers.Repo.GetAllUsers)
+
+	//Hats Routes
+	mux.Post("/hats/new", handlers.Repo.NewHats)
 
 	return mux
 }
