@@ -20,7 +20,6 @@ func (m *postgresDBRepo) AllProducts() ([]models.Products, error) {
 	if err != nil {
 		return products, err
 	}
-	log.Println(rows)
 	defer rows.Close()
 
 	for rows.Next() {
@@ -44,7 +43,6 @@ func (m *postgresDBRepo) AllProducts() ([]models.Products, error) {
 
 		return products, err
 	}
-	log.Println("here?")
 	return products, nil
 
 }
