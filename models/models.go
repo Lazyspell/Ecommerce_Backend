@@ -8,11 +8,12 @@ type Categories struct {
 	ImageUrl string `json:"image_url"`
 }
 
-type Hats struct {
-	Id        int       `json:"id"`
-	HatName   string    `json:"hat_name"`
-	ImageUrl  string    `json:"image_url"`
-	Price     int       `json:"price"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+type Products struct {
+	Id          int       `json:"id"`
+	ProductName string    `json:"hat_name"`
+	ImageUrl    string    `json:"image_url"`
+	Price       int       `json:"price"`
+	Product     string    `json:"product"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

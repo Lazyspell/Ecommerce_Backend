@@ -24,7 +24,7 @@ type DatabaseRepo interface {
 	//Authentication
 	Authenticate(email string) (models.Users, error)
 
-	//Hats
-	AllHats() ([]models.Hats, error)
-	NewHatsDB(hats models.Hats) (string, error)
+	//Products
+	AllProducts() ([]models.Products, error)
+	NewProductDB(hats models.Products) (string, error)
 }

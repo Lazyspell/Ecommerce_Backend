@@ -9,8 +9,8 @@ import (
 	"github.com/lazyspell/Ecommerce_Backend/models"
 )
 
-func (m *Repository) NewHats(w http.ResponseWriter, r *http.Request) {
-	var payload models.Hats
+func (m *Repository) NewProducts(w http.ResponseWriter, r *http.Request) {
+	var payload models.Products
 
 	err := json.NewDecoder(r.Body).Decode(&payload)
 	if err != nil {
@@ -18,14 +18,15 @@ func (m *Repository) NewHats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var hats models.Hats
+	var product models.Products
 
-	hats.HatName = payload.HatName
-	hats.ImageUrl = payload.ImageUrl
-	hats.Price = payload.Price
-	hats.CreatedAt = time.Now()
-	hats.UpdatedAt = time.Now()
-	_, err = m.DB.NewHatsDB(hats)
+	product.ProductName = payload.ProductName
+	product.ImageUrl = payload.ImageUrl
+	product.Price = payload.Price
+	product.Product = payload.Product
+	product.CreatedAt = time.Now()
+	product.UpdatedAt = time.Now()
+	_, err = m.DB.NewProductDB(product)
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
@@ -35,8 +36,8 @@ func (m *Repository) NewHats(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (m *Repository) GetAllHats(w http.ResponseWriter, r *http.Request) {
-	hats, err := m.DB.AllHats()
+func (m *Repository) GetAllProducts(w http.ResponseWriter, r *http.Request) {
+	hats, err := m.DB.AllProducts()
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
