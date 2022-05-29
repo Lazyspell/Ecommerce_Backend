@@ -10,7 +10,7 @@ type Categories struct {
 
 type Products struct {
 	Id          int       `json:"id"`
-	ProductName string    `json:"hat_name"`
+	ProductName string    `json:"product_name"`
 	ImageUrl    string    `json:"image_url"`
 	Price       int       `json:"price"`
 	Product     string    `json:"product"`
