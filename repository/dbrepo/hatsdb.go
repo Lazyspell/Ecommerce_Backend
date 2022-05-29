@@ -14,7 +14,7 @@ func (m *postgresDBRepo) AllHats() ([]models.Hats, error) {
 
 	var hats []models.Hats
 
-	query := `select id, hat_name, image_url, price from hats`
+	query := `select id, hat_name, image_url, price, created_at, updated_at from hats`
 
 	rows, err := m.DB.QueryContext(ctx, query)
 	if err != nil {
@@ -30,6 +30,8 @@ func (m *postgresDBRepo) AllHats() ([]models.Hats, error) {
 			&hat.HatName,
 			&hat.ImageUrl,
 			&hat.Price,
+			&hat.CreatedAt,
+			&hat.UpdatedAt,
 		)
 		if err != nil {
 			return hats, nil

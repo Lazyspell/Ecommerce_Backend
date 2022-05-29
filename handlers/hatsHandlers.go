@@ -34,3 +34,14 @@ func (m *Repository) NewHats(w http.ResponseWriter, r *http.Request) {
 	helpers.Create201(w)
 
 }
+
+func (m *Repository) GetAllHats(w http.ResponseWriter, r *http.Request) {
+	hats, err := m.DB.AllHats()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(hats)
+}
