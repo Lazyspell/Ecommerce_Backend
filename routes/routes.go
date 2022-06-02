@@ -30,7 +30,7 @@ func Routes(app *config.AppConfig) http.Handler {
 	mux.Group(func(admin chi.Router) {
 		admin.Use(jwtauth.Verifier(jwtauth.New("HS256", []byte("admin"), nil)))
 		admin.Use(jwtauth.Authenticator)
-		admin.Post("/admin/hats/new", handlers.Repo.NewProducts)
+		admin.Post("/admin/products/new", handlers.Repo.NewProducts)
 		admin.Delete("/admin/users/delete", handlers.Repo.DeleteUser)
 		admin.Get("/admin/users/all", handlers.Repo.GetAllUsers)
 		admin.Get("/admin/users/id", handlers.Repo.GetUserById)
