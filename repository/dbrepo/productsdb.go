@@ -51,7 +51,7 @@ func (m *postgresDBRepo) NewProductDB(product models.Products) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `insert into product (product_name, image_url, price, product, created_at, updated_at) values ($1, $2, $3, $4, $5, $6)`
+	query := `insert into products (product_name, image_url, price, product, created_at, updated_at) values ($1, $2, $3, $4, $5, $6)`
 
 	_, err := m.DB.ExecContext(ctx, query, product.ProductName, product.ImageUrl, product.Price, product.Product, product.CreatedAt, product.UpdatedAt)
 	if err != nil {
