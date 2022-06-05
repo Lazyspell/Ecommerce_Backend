@@ -60,3 +60,42 @@ func (m *postgresDBRepo) NewProductDB(product models.Products) (string, error) {
 	}
 	return "success", nil
 }
+
+func (m *postgresDBRepo) GetProductsByCategory(product string) ([]models.Products, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	var products []models.Products
+
+	query := `select id, product_name, image_url, price, product, created_at, updated_at from products where product = $1`
+
+	rows, err := m.DB.QueryContext(ctx, query, product)
+	if err != nil {
+		return products, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var item models.Products
+		err := rows.Scan(
+			&item.Id,
+			&item.ProductName,
+			&item.ImageUrl,
+			&item.Price,
+			&item.Product,
+			&item.CreatedAt,
+			&item.UpdatedAt,
+		)
+		if err != nil {
+			return products, err
+		}
+		products = append(products, item)
+
+	}
+	if err = rows.Err(); err != nil {
+		return products, err
+	}
+
+	return products, nil
+
+}
