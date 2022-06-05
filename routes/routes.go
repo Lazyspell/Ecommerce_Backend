@@ -72,6 +72,7 @@ func Routes(app *config.AppConfig) http.Handler {
 
 	//Product Routes
 	mux.Get("/product/all", handlers.Repo.GetAllProducts)
+	mux.Get("/product/category", handlers.Repo.GetAllProductsByCategory)
 
 	return mux
 }
