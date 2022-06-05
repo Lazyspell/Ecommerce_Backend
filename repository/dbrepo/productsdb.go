@@ -61,7 +61,7 @@ func (m *postgresDBRepo) NewProductDB(product models.Products) (string, error) {
 	return "success", nil
 }
 
-func (m *postgresDBRepo) GetProductsByCategory(product string) ([]models.Products, error) {
+func (m *postgresDBRepo) GetProductsByCategoryDB(product string) ([]models.Products, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 

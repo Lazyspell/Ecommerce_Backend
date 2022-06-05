@@ -27,4 +27,5 @@ type DatabaseRepo interface {
 	//Products
 	AllProducts() ([]models.Products, error)
 	NewProductDB(hats models.Products) (string, error)
+	GetProductsByCategoryDB(product string) ([]models.Products, error)
 }
