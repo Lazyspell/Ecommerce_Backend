@@ -37,12 +37,24 @@ func (m *Repository) NewProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *Repository) GetAllProducts(w http.ResponseWriter, r *http.Request) {
-	hats, err := m.DB.AllProducts()
+	products, err := m.DB.AllProducts()
 	if err != nil {
 		helpers.ServerError(w, err)
 		return
 	}
 
 	w.Header().Add("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(hats)
+	json.NewEncoder(w).Encode(products)
+}
+
+func (m *Repository) GetAllProductsByCategory(w http.ResponseWriter, r *http.Request) {
+	var payload models.Products
+	products, err := m.DB.GetProductsByCategoryDB(payload.Product)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(products)
 }
