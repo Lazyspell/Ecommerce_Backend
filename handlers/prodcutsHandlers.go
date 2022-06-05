@@ -49,6 +49,11 @@ func (m *Repository) GetAllProducts(w http.ResponseWriter, r *http.Request) {
 
 func (m *Repository) GetAllProductsByCategory(w http.ResponseWriter, r *http.Request) {
 	var payload models.Products
+	err := json.NewDecoder(r.Body).Decode(&payload)
+	if err != nil {
+		helpers.BadRequest400(w, "invalid type please check request body")
+		return
+	}
 	products, err := m.DB.GetProductsByCategoryDB(payload.Product)
 	if err != nil {
 		helpers.ServerError(w, err)
