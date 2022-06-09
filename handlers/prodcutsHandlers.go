@@ -47,6 +47,51 @@ func (m *Repository) GetAllProducts(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(products)
 }
 
+func (m *Repository) GetAllProductsAsObjects(w http.ResponseWriter, r *http.Request) {
+	var objectList []models.Items
+	var ProductObject models.Items
+	hats, err := m.DB.GetProductsByCategoryDB("Hats")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	ProductObject.Hats = hats
+
+	jackets, err := m.DB.GetProductsByCategoryDB("Jackets")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	ProductObject.Jackets = jackets
+
+	sneakers, err := m.DB.GetProductsByCategoryDB("Sneakers")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	ProductObject.Sneakers = sneakers
+
+	womens, err := m.DB.GetProductsByCategoryDB("Womens")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	ProductObject.Womens = womens
+
+	mens, err := m.DB.GetProductsByCategoryDB("Mens")
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+	ProductObject.Mens = mens
+
+	objectList = append(objectList, ProductObject)
+
+	w.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(objectList)
+
+}
+
 func (m *Repository) GetAllProductsByCategory(w http.ResponseWriter, r *http.Request) {
 
 	payload := r.URL.Query().Get("product")
