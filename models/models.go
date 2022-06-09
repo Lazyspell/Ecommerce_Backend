@@ -17,3 +17,15 @@ type Products struct {
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
+
+type Items struct {
+	Hats     []Products `json:"hats"`
+	Sneakers []Products `json:"sneakers"`
+	Jackets  []Products `json:"jackets"`
+	Womens   []Products `json:"womens"`
+	Mens     []Products `json:"mens"`
+}
+
+type ProductsObject struct {
+	objects []Items
+}
