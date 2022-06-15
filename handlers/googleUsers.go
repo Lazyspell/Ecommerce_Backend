@@ -108,9 +108,3 @@ func (m *Repository) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(contents)
 
 }
-
-// func newGoogleUser(googleUser models.GoogleObject){
-
-// 	googleUser.
-
-// }
