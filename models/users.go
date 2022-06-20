@@ -35,7 +35,6 @@ type GoogleObject struct {
 	Locale    string
 }
 
-//TODO: need to remove the Password frield from teh User model and switch everything to the password model
 type Password struct {
 	Password string `json:"password"`
 }
